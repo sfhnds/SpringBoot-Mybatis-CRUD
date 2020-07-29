@@ -11,6 +11,7 @@ import java.util.List;
 @RestController
 public class UserController {
     @Autowired
+
     private UserMapper userMapper;
     @RequestMapping("/queryUserList")
     public List<User> queryUserList(){

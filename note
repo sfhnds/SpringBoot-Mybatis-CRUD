@@ -1,3 +1,52 @@
 1.在cmd里输入netstat -ano|findstr 8080，查看是哪个进程占用了8080端口
 2.输入taskkill /pid 14424 /f，结束掉占用端口的进程（14424是我的占用端口的进程）
 
+1.先在pom里面配置mybatis启动文件
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.1.3</version>
+        </dependency>
+        ----redis配置文件
+         <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+                <dependency>
+                    <groupId>redis.clients</groupId>
+                    <artifactId>jedis</artifactId>
+                    <version>2.9.0</version>
+                </dependency>
+2.在application.properties配置数据库信息和mybatis启动xml
+spring.datasource.url=jdbc:oracle:thin:@localhost:1521:orcl
+spring.datasource.username=test
+spring.datasource.password=147852369
+spring.datasource.driver-class-name=oracle.jdbc.driver.OracleDriver
+mybatis.type-aliases-package=com.kuang.pojo
+mybatis.mapper-locations=classpath:mybatis/mapper/*.xml
+3.测试类可以测试下datasource是否连接上了数据库
+4.编写数据库用户信息
+5.写实体类pojo
+6.写mapper interface根据应实体类信息编写curd方法 加 @Mapper @Repository配置给mapper.xml扫描和放入spirng容器
+7.在resources下面mapper文件下编写mapper.xml数据库指令信息
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuang.mapper.UserMapper">
+    <select id="queryUserList" resultType="User">
+     select * from user1
+  </select>
+    <select id="queryUserById" resultType="User">
+            select * from user1 where id = #{id}
+</select>
+    <insert id="addUser" parameterType="User">
+        insert into user1 (id,name,password) values (#{id},#{name},#{password})
+    </insert>
+
+    <update id="updateUser" parameterType="User">
+        update user1 set name=#{name},password=#{password} where id = #{id}
+    </update>
+    <delete id="deleteUser" parameterType="int">
+        delete from user1 where id =#{id}
+    </delete>
+</mapper>
+
+8.正常情况编写service类，然后controller调用service,偷懒直接用controller调用UserMapper去实现crud具体内容
